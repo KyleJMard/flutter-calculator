@@ -264,6 +264,24 @@ class _CalculatorPageState extends State<CalculatorPage> {
         return;
       }
 
+      // === Square (x²) functionality (replaces square root) ===
+      if (value == 'x²') {
+        String operand = _expression.isEmpty ? _result : _expression;
+        if (operand.isEmpty) return;
+        double? val = double.tryParse(operand);
+        if (val == null) {
+          _error = 'Invalid input';
+          return;
+        }
+        double sqVal = val * val;
+        final intMode = _isPureIntegerExpression(operand);
+        if (!_finalize(sqVal, intMode: intMode, op: 'x²')) return;
+        _expression = '';
+        _lastOperator = '';
+        _lastOperand = '';
+        return;
+      }
+
       if (_isOperator(value)) {
         if (_expression.isEmpty) {
           if (_result.isNotEmpty) {
@@ -393,6 +411,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 ),
                 Row(
                   children: [
+                    _buildButton('x²', color: Colors.purple, fontSize: 28),
                     _buildButton('=', color: Colors.green, fontSize: 28),
                   ],
                 ),
